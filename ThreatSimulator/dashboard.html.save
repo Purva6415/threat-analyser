@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Simulator | Mac + Windows Compatible</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(8, 12, 25, 0.9);
+            border-radius: 2rem;
+            border: 1px solid #0ff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #050a15;
+            padding: 1.5rem;
+            border-bottom: 2px solid #0fa;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #0ff;
+            font-size: 1.5rem;
+        }
+
+        .button-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .threat-btn {
+            background: #11161f;
+            border: none;
+            font-size: 1.2rem;
+            padding: 1rem 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+            box-shadow: 0 4px 0 #000;
+        }
+
+        .threat-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #000;
+        }
+
+        .virus { border-bottom: 3px solid #f44; }
+        .ransom { border-bottom: 3px solid #fa6; }
+        .rat { border-bottom: 3px solid #6af; }
+
+        .report-card {
+            background: #0a1020;
+            margin: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border-left: 4px solid #f44;
+        }
+
+        .malicious {
+            background: #8b0000;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .download-btn {
+            background: #1e2f3f;
+            border: 1px solid #0ff;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .log-area {
+            background: #010101;
+            margin: 1.5rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+        }
+
+        .log-line {
+            color: #0f0;
+            margin: 0.3rem 0;
+            font-family: monospace;
+        }
+
+        .note {
+            background: #0a281f;
+            margin: 1rem;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #8bc6bc;
+        }
+
+        button {
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="header">
+        <h1>⚡ MALWARE THREAT SIMULATOR ⚡</h1>
+        <p>Educational | Mac + Windows Compatible | Safe Execution</p>
+    </div>
+
+    <div class="button-panel">
+        <button class="threat-btn virus" id="virusBtn">🦠 virus.exe</button>
+        <button class="threat-btn ransom" id="ransomBtn">🔒 ransomware.exe</button>
+        <button class="threat-btn rat" id="ratBtn">👁️ RAT.exe</button>
+    </div>
+
+    <div id="reportArea" class="report-card">
+        <div style="text-align: center; opacity: 0.7;">⚠️ Click any button to generate threat report + executable ⚠️</div>
+    </div>
+
+    <div id="logArea" class="log-area">
+        <div class="log-line">[+] Simulator ready</div>
+        <div class="log-line">[+] Mac users: .command file download hoga (double-click to run safely)</div>
+        <div class="log-line">[+] Windows users: .exe file download hoga</div>
+    </div>
+
+    <div class="note">
+        🛡️ 100% SAFE — Generated files sirf ek message box dikhate hain. Koi harmful action nahi.<br>
+        ✅ Report "MALICIOUS" show karega — ye sirf educational threat intelligence simulation hai.
+    </div>
+</div>
+
+<script>
+    // Detect OS
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    
+    // Add OS info to log
+    function addLog(msg) {
+        const logDiv = document.getElementById('logArea');
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-line';
+        logEntry.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        logDiv.appendChild(logEntry);
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    addLog(`[OS Detection] ${isMac ? 'macOS detected → .command files will be generated' : 'Windows detected → .exe files will be generated'}`);
+
+    // Generate SAFE executable (Mac: .command, Windows: .exe)
+    function generateSafeFile(threatType) {
+        const timestamp = new Date().getTime();
+        let filename, content, mimeType;
+        
+        const message = `[THREAT SIMULATION]\nThreat Type: ${threatType}\nVerdict: MALICIOUS (Static Analysis)\n\nBut don't worry — this is 100% SAFE.\nNo harm done to your system.\n\nEducational Purpose Only.`;
+        
+        if (isMac) {
+            // For Mac: Create .command file (bash script that shows dialog)
+            filename = `${threatType}_${timestamp}.command`;
+            content = `#!/bin/bash\nosascript -e 'display dialog "${message.replace(/"/g, '\\"')}" buttons {"OK"} default button "OK" with icon caution with title "⚠️ THREAT SIMULATION ⚠️"' \necho "Simulation complete - Safe execution"`;
+            mimeType = 'text/plain';
+        } else {
+            // For Windows: Create .exe (we'll use a data URI approach with a simple HTML/HTA? No, better to provide PowerShell stub)
+            // Actually, proper .exe requires binary. For simplicity and safety, we create a .bat file renamed?
+            // Better: Create a simple PowerShell script that shows message box
+            filename = `${threatType}_${timestamp}.exe`;
+            // This is a clever trick: Create a .bat file but name it .exe? No, that won't run.
+            // Instead, we create a legitimate .js file that Windows can run via wscript?
+            // For genuine .exe feel without binary: Create a self-contained HTML application (.hta)
+            // But easiest: Create a .vbs script that shows message box
+            content = `MsgBox "${message}", vbInformation, "THREAT SIMULATION (SAFE)"`;
+            mimeType = 'application/octet-stream';
+            // But .vbs as .exe won't run. So we actually give .vbs but tell user to rename?
+            // Better: Just give a functional .js file that Windows can double-click
+            filename = `${threatType}_${timestamp}.js`;
+            content = `WScript.Echo("${message.replace(/"/g, '\\"')}");`;
+        }
+        
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        return filename;
+    }
+    
+    // Generate threat report
+    function generateReport(threatType, fileName) {
+        const reportDiv = document.getElementById('reportArea');
+        const severity = 'CRITICAL';
+        const family = threatType.toUpperCase();
+        const hash = Math.random().toString(36).substring(2, 15);
+        
+        reportDiv.innerHTML = `
+            <div style="color: #ff8888;">
+                <span class="malicious">⚠️ VERDICT: MALICIOUS ⚠️</span>
+                <h3 style="margin: 1rem 0 0.5rem 0;">📋 Threat Analysis Report</h3>
+                <div style="font-size: 0.85rem; line-height: 1.6;">
+                    <p><strong>File:</strong> ${fileName}</p>
+                    <p><strong>Threat Family:</strong> ${family}</p>
+                    <p><strong>Severity:</strong> ${severity}</p>
+                    <p><strong>MD5:</strong> ${hash}</p>
+                    <p><strong>Detection Ratio:</strong> 42/68</p>
+                    <p><strong>Behavior:</strong> Suspicious API calls detected, potential ${threatType} indicators</p>
+                    <p><strong>Static Analysis:</strong> Malicious patterns found in PE sections</p>
+                    <p><strong>Sandbox Verdict:</strong> 🛑 BLOCKED (Educational Simulation)</p>
+                </div>
+                <div class="download-btn" style="margin-top: 1rem;">
+                    ✅ File downloaded: ${fileName}
+                </div>
+                <div style="margin-top: 1rem; font-size: 0.75rem; color: #8bc6bc;">
+                    ℹ️ This is a SAFE simulation file. Run it to see a harmless message box.
+                </div>
+            </div>
+        `;
+    }
+    
+    // Handle button clicks
+    function handleThreat(threatType) {
+        addLog(`[ALERT] Generating ${threatType} sample...`);
+        addLog(`[ANALYSIS] Static detection: MALICIOUS`);
+        const fileName = generateSafeFile(threatType);
+        generateReport(threatType, fileName);
+        addLog(`[DOWNLOAD] ${fileName} created successfully`);
+        addLog(`[SAFE] File is harmless — run it to see simulation message`);
+        addLog(`[INSTRUCTION] ${isMac ? 'Double-click .command file → Terminal opens → OK' : 'Double-click .js file → Windows Script Host shows message'}`);
+    }
+    
+    // Attach event listeners
+    document.getElementById('virusBtn').addEventListener('click', () => handleThreat('virus'));
+    document.getElementById('ransomBtn').addEventListener('click', () => handleThreat('ransomware'));
+    document.getElementById('ratBtn').addEventListener('click', () => handleThreat('RAT'));
+    
+    addLog('[READY] Click any button to start simulation');
+</script>
+</body>
+</html>
